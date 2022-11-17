@@ -9,6 +9,7 @@ import random
 
 import json
 
+
 nltk.download('punkt')
 
 
@@ -91,10 +92,22 @@ def bag_of_words(s, words):
 
 
 def chat():
+    prevTag= ""
+    print("Kilepeshez nyomj 'q'-t")
     while True:
-        inp = input("> ")
-        if inp.lower() == "quit":
+        inp = input("uzenet: ")
+        if inp.lower() == "q":
             break
+
+        #print(prevTag)
+        if prevTag == "allapot":
+            for item in data['intents']:
+                if item['tag'] == "allapot":
+                    item['responses'].append(inp)
+
+            json.dump(data, open('intents.json', "w"))
+            prevTag= ""
+            continue
 
         bow = bag_of_words(inp, words)
 
@@ -108,6 +121,11 @@ def chat():
                 responses = tg['responses']
 
         print(random.choice(responses))
+
+        if tag == "allapot":
+            print("Es te hogy vagy?")
+            prevTag = "allapot"
+
 
 
 chat()
